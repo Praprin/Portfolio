@@ -1,21 +1,21 @@
 # Portfolio
 
-QA-портфолио: тестовые задания и проекты, разложенные по типу артефакта, а не по проекту — так удобнее сравнивать однотипную работу между собой.
+QA portfolio: test assignments and projects organized by artifact type rather than by project — makes it easier to compare like-for-like work across projects.
 
 ```
-bug-reports/<project>/   — карточки багов + вложения (скрины/gif/видео/логи)
-test-plans/<project>/    — чек-листы, тест-планы, описание подхода/окружения
-reports/<project>/       — сравнения билдов, находки, аналитика, итоговые README проектов
+bug-reports/<project>/   — bug cards + attachments (screenshots/gifs/video/logs)
+test-plans/<project>/    — checklists, test plans, approach/environment notes
+reports/<project>/       — build comparisons, findings, analysis, project overview READMEs
 ```
 
-Каждый проект живёт как одноимённая подпапка внутри всех трёх категорий сразу — так контекст конкретного задания не теряется, а по мере роста портфолио легко фильтровать «все баг-репорты» или «все чек-листы».
+Each project lives as an identically-named subfolder inside all three categories at once — so the context of a specific assignment isn't lost, and as the portfolio grows it's easy to filter "all bug reports" or "all checklists."
 
-## Проекты
+## Projects
 
-### FarmSim QA — тестирование мобильной игры (NDA studio)
+### FarmSim QA — mobile game testing (NDA studio)
 
-Сравнение двух билдов + полное функциональное/нефункциональное тестирование, 10 задокументированных дефектов.
+Build comparison + full functional/non-functional testing, 10 documented defects.
 
-- [Обзор проекта / сравнение билдов](reports/farmsim-qa/README.md)
-- [Тест-план и чек-лист](test-plans/farmsim-qa/checklist.md)
-- [Баг-репорты](bug-reports/farmsim-qa/README.md)
+- [Project overview / build comparison](reports/farmsim-qa/README.md)
+- [Test plan and checklist](test-plans/farmsim-qa/checklist.md)
+- [Bug reports](bug-reports/farmsim-qa/README.md)

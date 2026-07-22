@@ -1,22 +1,22 @@
-# FarmSim QA — тестовое задание (мобильная игра, NDA studio)
+# FarmSim QA — Test Assignment (Mobile Game, NDA Studio)
 
-Автор: Alexey Praprin · Дата: 06.07.2026
+Author: Alexey Praprin · Date: 07/06/2026
 
-> **Портфолио-версия.** Оригинальное тестовое задание выполнено для реальной студии по NDA. Название студии, название игры, package name, домены и подпись сборки в этой копии заменены на нейтральные плейсхолдеры (`FarmSim` / `NDA Studio` / `com.ndastudio.farmsimqa`); на скриншотах и видео замазаны фрагменты, где были видны реальные название игры/пакет/номер телефона. Структура отчёта, чек-лист, баг-репорты и находки — без изменений.
+> **Portfolio version.** The original test assignment was completed for a real studio under NDA. The studio name, game name, package name, domains, and build signature in this copy have been replaced with neutral placeholders (`FarmSim` / `NDA Studio` / `com.ndastudio.farmsimqa`); on screenshots and videos, fragments showing the real game name/package/phone number have been blurred out. The structure of the report, checklist, bug reports, and findings is unchanged.
 
-Тестовое задание QA по мобильной игре **FarmSim** (`com.ndastudio.farmsimqa`, v0.7.0 / code 1700). Два билда: `FarmSim-QA-Test1.apk`, `FarmSim-QA-Test2.apk`.
+QA test assignment for the mobile game **FarmSim** (`com.ndastudio.farmsimqa`, v0.7.0 / code 1700). Two builds: `FarmSim-QA-Test1.apk`, `FarmSim-QA-Test2.apk`.
 
-## Навигация
+## Navigation
 
-- **[Сравнение билдов](builds-comparison.md)** и **[реестр находок](findings.md)** — статический анализ обоих APK: чем отличаются билды, по каким характеристикам, вердикт по готовности к релизу.
-- **[Тест-план и чек-лист](../../test-plans/farmsim-qa/checklist.md)** — подход, окружение, полное функциональное/нефункциональное тестирование.
-- **[Баг-репорты](../../bug-reports/farmsim-qa/README.md)** — 10 карточек дефектов со скринами/gif/видео/логами.
+- **[Build comparison](builds-comparison.md)** and **[findings registry](findings.md)** — static analysis of both APKs: how the builds differ, on which characteristics, and the release-readiness verdict.
+- **[Test plan and checklist](../../test-plans/farmsim-qa/checklist.md)** — approach, environment, full functional/non-functional testing.
+- **[Bug reports](../../bug-reports/farmsim-qa/README.md)** — 10 defect cards with screenshots/gifs/videos/logs.
 
-## Кратко
+## In short
 
-- **Сравнение билдов:** оба APK — одна версия игры в двух вариантах сборки (32-бит/target29/2022 и 64-бит/target30/2025). Различия: архитектура, targetSdk, размер, дата сборки, частично переэкспортированные анимации. Оба — отладочные QA-сборки, не готовые к публикации.
-- **Тестирование:** функциональное и нефункциональное тестирование билда Test1 на реальном устройстве + ARM-эмуляторе. Найдено 10 дефектов, от Critical (доступное игроку debug/cheat-меню) до Minor.
+- **Build comparison:** both APKs are the same game version in two build variants (32-bit/target29/2022 and 64-bit/target30/2025). Differences: architecture, targetSdk, size, build date, partially re-exported animations. Both are debug QA builds, not ready for publication.
+- **Testing:** functional and non-functional testing of the Test1 build on a real device + ARM emulator. 10 defects found, ranging from Critical (player-accessible debug/cheat menu) to Minor.
 
-## Почему такой формат
+## Why this format
 
-Отчёт в Git-репозитории на Markdown: версионируется, ревьюится как код, открывается по одной ссылке без скачиваний, доказательства (скрины/gif/mp4/txt-логи) лежат рядом с багами.
+A report in a Git repository as Markdown: versioned, reviewable like code, opens with a single link with no downloads needed, evidence (screenshots/gifs/mp4/txt logs) sits right next to each bug.

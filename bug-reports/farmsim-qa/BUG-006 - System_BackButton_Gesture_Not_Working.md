@@ -1,40 +1,40 @@
-# BUG-006 - Системная кнопка/жест «Назад» (Android Back) не работает нигде в игре
+# BUG-006 - System Back button/gesture (Android Back) doesn't work anywhere in the game
 
-| Поле                 | Значение                                                                       |
+| Field                 | Value                                                                       |
 | -------------------- | ------------------------------------------------------------------------------ |
 | **Type**             | Functional (+ related Usability)                                               |
 | **Severity**         | Major                                                                          |
 | **Priority**         | Medium                                                                         |
 | **Status**           | Open                                                                           |
 | **Affects build**    | Test1 (v0.7.0 / code 1700)                                                     |
-| **Environment**      | Xiaomi 12T Pro, Android 15 (API 35), arm64; жестовая навигация (свайп от края) |
-| **Component / Area** | Навигация / системная интеграция (Back)                                        |
+| **Environment**      | Xiaomi 12T Pro, Android 15 (API 35), arm64; gesture navigation (edge swipe) |
+| **Component / Area** | Navigation / system integration (Back)                                        |
 | **Reproducibility**  | Always                                                                         |
 
-## Предусловия
+## Preconditions
 
-Игра запущена (главное меню / игровой процесс / любое вложенное окно).
+The game is running (main menu / gameplay / any nested window).
 
-## Шаги воспроизведения
+## Steps to reproduce
 
-1. На любом экране выполнить системный жест «Назад» (свайп слева направо) либо нажать системную кнопку «Назад».
-2. Наблюдать реакцию игры
+1. On any screen, perform the system "Back" gesture (swipe left-to-right) or press the system "Back" button.
+2. Observe the game's response.
 
-## Ожидаемый результат
+## Expected result
 
-Системная «Назад» возвращает на предыдущий экран / открывает паузу / показывает запрос выхода - по конвенции Android приложение реагирует на Back.
+System "Back" returns to the previous screen / opens the pause menu / shows an exit prompt - per Android convention, the app should respond to Back.
 
-## Фактический результат
+## Actual result
 
-Системная «Назад» и back-жест **не срабатывают нигде** - реакции нет, экран не меняется. Вернуться на предыдущий экран системным способом невозможно (приложение не обрабатывает Android Back).
+System "Back" and the back gesture **have no effect anywhere** - no response, the screen doesn't change. There's no way to return to the previous screen via the system method (the app doesn't handle Android Back).
 
-## Вложения
+## Attachments
 
-![Свайп «назад» без реакции](attachments/BUG-006/SwipeBack_Bug.gif)
+![Back swipe with no response](attachments/BUG-006/SwipeBack_Bug.gif)
 
-## Заметки (impact + UX)
+## Notes (impact + UX)
 
-Дефект усугубляется отсутствием навигации в UI: видимой кнопки «Назад»/стрелки (обычно «←» в левом верхнем углу) в игре нет; единственный выход из игрового процесса - маленькая кнопка «Пауза» в углу → меню → «Выйти», которую сложно обнаружить (замечается не сразу; неочевидно, что выход спрятан в паузе).
+The defect is compounded by the lack of navigation affordance in the UI: there's no visible "Back"/arrow button (usually "←" in the top-left corner) in the game; the only way out of gameplay is a small "Pause" button in the corner → menu → "Exit", which is hard to discover (not noticed immediately; it's not obvious that exit is hidden inside pause).
 
-**Нарушения:** конвенции Android (обработка Back), эвристики юзабилити (видимость навигации, узнавание вместо припоминания).
-**Рекомендация:** обрабатывать системный Back (в Unity - `KeyCode.Escape`) как «назад/пауза»; добавить видимый элемент возврата/выхода на игровых экранах.
+**Violations:** Android convention (Back handling), usability heuristics (visibility of navigation, recognition rather than recall).
+**Recommendation:** handle system Back (in Unity, `KeyCode.Escape`) as "back/pause"; add a visible back/exit element on gameplay screens.

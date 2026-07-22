@@ -1,21 +1,21 @@
-Логи запуска на AVD (образ Android «16 KB Page Size», API 37). Ключевой краш - загрузка libmain.so.
+Startup logs on AVD (Android "16 KB Page Size" image, API 37). The key crash is loading libmain.so.
 
-=== РЕШАЮЩИЕ СТРОКИ (краш на 16-КБ странице) ===
+=== DECISIVE LINES (crash on the 16 KB page) ===
 2026-07-06 12:09:11.434  8252-8252  linker  com.ndastudio.farmsimqa  E  "/data/app/~~mnQBfptcC9_6a5ZankH6Mg==/com.ndastudio.farmsimqa-3kZYDHm6UgEzh9R_byphiQ==/lib/arm64/libmain.so" program alignment (8192) cannot be smaller than system page size (16384)
 2026-07-06 12:09:11.452  8252-8252  Unity   com.ndastudio.farmsimqa  E  Failed to load 'libmain.so'
         java.lang.UnsatisfiedLinkError: dlopen failed: "/data/app/~~mnQBfptcC9_6a5ZankH6Mg==/com.ndastudio.farmsimqa-3kZYDHm6UgEzh9R_byphiQ==/lib/arm64/libmain.so" program alignment (8192) cannot be smaller than system page size (16384)
 2026-07-06 12:09:11.452  8252-8252  Unity   com.ndastudio.farmsimqa  E  Your hardware does not support this application.
 
-=== СОПУТСТВУЮЩИЕ (не фатальные, для контекста) ===
-# targetSdk=30 -> OkHttp (внутри Firebase Crashlytics) не может обратиться к скрытому Android API, откатывается:
+=== RELATED (non-fatal, for context) ===
+# targetSdk=30 -> OkHttp (inside Firebase Crashlytics) can't access a hidden Android API, falls back:
 2026-07-06 12:09:11.363  E  hiddenapi: Accessing hidden method Lcom/android/org/conscrypt/OpenSSLSocketImpl;->setUseSessionTickets(Z)V ... (domain=app, TargetSdkVersion=30) using reflection: denied
 2026-07-06 12:09:11.366  OkHttp  W  unable to load android socket classes
 2026-07-06 12:09:11.366  OkHttp  W  java.lang.NoSuchMethodException: com.android.org.conscrypt.OpenSSLSocketImpl.setUseSessionTickets [boolean]
 
-# Firebase Analytics не смог отправить события (следствие раннего краша + отсутствие полноценных Play services на эмуляторе):
+# Firebase Analytics couldn't send events (a consequence of the early crash + no full Play services on the emulator):
 2026-07-06 12:09:11.943  FA  W  Service connection failed: ConnectionResult{statusCode=UNKNOWN_ERROR_CODE(7777)...}
 2026-07-06 12:09:11.952  FA  E  Discarding data. Failed to send app launch
 2026-07-06 12:09:11.953  FA  E  Failed to get app instance id
 
-# hardwareAccelerated=false (см. находку F-22): ripple-анимации пропускаются:
+# hardwareAccelerated=false (see finding F-22): ripple animations are skipped:
 2026-07-06 12:19:16.759  RippleDrawable  E  The RippleDrawable.STYLE_PATTERNED animation is not supported for a non-hardware accelerated Canvas. Skipping animation.

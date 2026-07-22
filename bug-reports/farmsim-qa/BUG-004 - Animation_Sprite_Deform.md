@@ -1,52 +1,50 @@
-# BUG-004 - Деформация изображения разлоченого апгрейда во время анимации его «улёта в инвентарь»
+# BUG-004 - Unlocked upgrade image deforms during its "fly-to-inventory" animation
 
-| Поле                 | Значение                                          |
+| Field                 | Value                                          |
 | -------------------- | ------------------------------------------------- |
-| **Type**             | UI / Visual (анимация)                            |
+| **Type**             | UI / Visual (animation)                            |
 | **Severity**         | Minor                                             |
 | **Priority**         | Low                                               |
 | **Status**           | Open                                              |
 | **Affects build**    | Test1 (v0.7.0 / code 1700)                        |
 | **Environment**      | Xiaomi 12T Pro, Android 15 (API 35), arm64        |
-| **Component / Area** | UI / анимации / сбор награды                      |
-| **Reproducibility**  | Always (наблюдался постоянно со всеми апгрейдами) |
+| **Component / Area** | UI / animations / reward collection                      |
+| **Reproducibility**  | Always (observed consistently with all upgrades) |
 
-## Предусловия
+## Preconditions
 
-Игрок на любом уровне, после прохождения которого должен выдаваться апгрейд. Прохождение уровня начато.
+Player is on any level whose completion grants an upgrade. Level playthrough has started.
 
-## Шаги воспроизведения
+## Steps to reproduce
 
-1. Вар. А: пройти уровень с победой. Вар. Б: через дебаг-панель выбрать "Win level".
-2. Дождаться пока прогресс-бар дойдёт до очередного апгрейда и он разблокируется.
-3. Наблюдать демонстрацию апгрейда в центре экрана.
-4. Тапнуть по апгрейду, чтобы начать анимацию его исчезновения.
-5. Наблюдать анимацию, где награда «улетает» в инвентарь/арсенал.
+1. Option A: complete the level with a win. Option B: use the debug panel and select "Win level".
+2. Wait for the progress bar to reach the next upgrade and for it to unlock.
+3. Watch the upgrade showcase in the center of the screen.
+4. Tap the upgrade to start its disappearance animation.
+5. Watch the animation where the reward "flies" into the inventory/arsenal.
 
-## Ожидаемый результат
+## Expected result
 
-1. Изображение разблокированного апгрейда сохраняет форму и пропорции на всём протяжении анимации «улёта» в инвентарь/арсенал.
+1. The unlocked upgrade image keeps its shape and proportions throughout the "fly-to-inventory" animation.
 
-2. Размер изображения уменьшается с сохранением пропорций квадрата на протяжении всей анимации
+2. The image shrinks while keeping square proportions throughout the animation.
 
-3. Возможно, изображение должно постепенно "растворяться" (fade-out)
+3. The image possibly should gradually fade out.
 
-4. Картинка апгрейда должна сохраняться до конца анимации исчезновения, не должно быть видно плейсхолдер
+4. The upgrade picture should be preserved until the end of the disappearance animation - no placeholder should be visible.
 
-## Фактический результат
+## Actual result
 
-1. Во время анимации «улёта» в инвентарь изображение апгрейда **деформируется/искажается** (нарушаются пропорции спрайта). Наблюдается со всеми апгрейдами.
+1. During the "fly-to-inventory" animation, the upgrade image **deforms/distorts** (the sprite's proportions break). Observed with all upgrades.
 
-2. Изображение уменьшается по оси X, но не по оси Y
+2. The image shrinks along the X axis but not the Y axis.
 
-3. Fade-out картинки не происходит
+3. No fade-out of the picture occurs.
 
-4. В самом конце анимации, картинка пропадает и остается только белый искаженный плейсхолдер
+4. At the very end of the animation, the picture disappears and only a distorted white placeholder remains.
 
-## Вложения
+## Attachments
 
-![Анимация «улёта» апгрейда с деформацией](attachments/BUG-004/upgrade_item_image_deformation.gif)
+![Upgrade "fly-away" animation with deformation](attachments/BUG-004/upgrade_item_image_deformation.gif)
 
-![Белый плейсхолдер в конце анимации](attachments/BUG-004/white_placeholder.png)
-
-# 
+![White placeholder at the end of the animation](attachments/BUG-004/white_placeholder.png)

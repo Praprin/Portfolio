@@ -1,61 +1,59 @@
-# Реестр находок - FarmSim (Доп. к Заданию №1)
+# Findings Registry - FarmSim (Supplement to Assignment #1)
 
-Полный список того, что удалось выяснить о двух сборках при их разборе (без запуска игры). Находки сгруппированы по темам, нумерация F‑01…F‑22 - для ссылок.
+Full list of what was determined about the two builds during static analysis (without running the game). Findings are grouped by topic, numbered F‑01…F‑22 for cross-referencing.
 
 ---
 
-### 1. Готовность к публикации в Play Store
+### 1. Readiness for Play Store publication
 
-| Код  | Находка                             | Что это                                                                                                                                                   |
-| ---- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F‑01 | Отладочная сборка                   | Игра собрана в режиме разработчика (отладочном). Google Play такие сборки не принимает, плюс это риск безопасности.                                       |
-| F‑02 | Старая целевая версия Android       | Сборки рассчитаны на версию Android ниже той, что сейчас требует Google Play. В таком виде игру не опубликовать.                                          |
-| F‑03 | Сборки под разные процессоры        | Одна работает только на старых 32-битных телефонах, другая только на новых 64-битных. Google Play требует поддержку 64 бит, поэтому 32-битная не пройдёт. |
-| F‑04 | Внутри игры есть отладочная консоль | В сборку встроен инструмент разработчика (служебная консоль). В финальной версии его быть не должно.                                                      |
-| F‑05 | Игра подключена к тестовому серверу | Обе сборки настроены на тестовое (QA) окружение. Для релиза нужен рабочий (продакшн) конфиг.                                                              |
+| Code  | Finding                             | What it means                                                                                                                                                   |
+| ---- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F‑01 | Debug build                   | The game is built in developer (debug) mode. Google Play doesn't accept such builds, and it's also a security risk.                                       |
+| F‑02 | Outdated target Android version       | The builds target an Android version below what Google Play currently requires. The game can't be published as-is.                                          |
+| F‑03 | Builds for different CPU architectures        | One only works on old 32-bit phones, the other only on newer 64-bit ones. Google Play requires 64-bit support, so the 32-bit build won't pass. |
+| F‑04 | A debug console is built into the game | A developer tool (an internal console) is embedded in the build. It shouldn't be present in the final version.                                                      |
+| F‑05 | The game is connected to a test server | Both builds are configured for a test (QA) environment. The release needs a working (production) config.                                                              |
 
-### 2. Безопасность и приватность
+### 2. Security and privacy
 
-| Код  | Находка                                       | Что это                                                                                                                                                              |
+| Code  | Finding                                       | What it means                                                                                                                                                              |
 | ---- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F‑06 | В сборке видны технические ключи доступа      | Внутри приложения лежат клиентские ключи и адреса сервисов. Для приложений это нормально, но их нужно защищать настройками на стороне сервера.                       |
-| F‑07 | Отладочная сборка подписана «продакшн» ключом | Хотя сборки отладочные, подписаны они настоящим ключом компании - причём обе одним и тем же.                                                                         |
-| F‑08 | Данные уходят сторонним сервисам              | Игра передаёт данные во внешние сервисы (аналитика, отчёты о сбоях, реклама, соцсети). Это нужно честно указать в карточке приложения (раздел о конфиденциальности). |
-| F‑09 | Небезопасная настройка сети                   | Настройки позволяют перехватывать защищённый трафик приложения. Удобно для тестирования, но в релизе это уязвимость.                                                 |
-| F‑10 | Сервис отслеживания установок и рекламы       | В игре есть сервис, который отслеживает источники установок и отправляет данные наружу.                                                                              |
-| F‑11 | Остались внутренние адреса разработчика       | В настройках сборки сохранились внутренние сетевые адреса рабочей машины разработчика - это следы сборки для разработки.                                             |
+| F‑06 | Technical access keys are visible in the build      | Client-side keys and service addresses are stored inside the app. This is normal for apps, but they need to be protected via server-side settings.                       |
+| F‑07 | The debug build is signed with a "production" key | Even though the builds are debug builds, they're signed with the company's real key - and both with the same one.                                                                         |
+| F‑08 | Data is sent to third-party services              | The game transmits data to external services (analytics, crash reporting, ads, social networks). This needs to be honestly disclosed in the app's privacy section. |
+| F‑09 | Insecure network configuration                   | The settings allow interception of the app's secure traffic. Convenient for testing, but a vulnerability in a release.                                                 |
+| F‑10 | Install-tracking and ad-attribution service       | The game has a service that tracks install sources and sends data out.                                                                              |
+| F‑11 | Leftover internal developer addresses       | Internal network addresses of the developer's work machine remain in the build settings - traces of the development build.                                             |
 
-### 3. Разрешения
+### 3. Permissions
 
-| Код  | Находка                                   | Что это                                                                                                                                 |
-| ---- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| F‑12 | Устаревшее разрешение на доступ к файлам  | Игра просит устаревший доступ к записи файлов. На новой сборке оно уже не действует, на старой ещё запрашивается.                       |
-| F‑13 | Разрешение на Wi-Fi без явной функции     | Игра запрашивает разрешение, связанное с Wi-Fi-сетью, хотя видимой функции под него нет. Лишние разрешения Google Play не приветствует. |
-| F‑14 | Набор разрешений одинаков в обеих сборках | Обе просят одно и то же: доступ в интернет, состояние сети, покупки внутри игры, уведомления и пару служебных.                          |
+| Code  | Finding                                   | What it means                                                                                                                                 |
+| ---- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| F‑12 | Deprecated file-write permission  | The game requests a deprecated file-write permission. It no longer has effect on the newer build, but is still requested on the older one.                       |
+| F‑13 | Wi-Fi permission with no clear function     | The game requests a Wi-Fi-network-related permission with no visible function tied to it. Google Play doesn't favor unnecessary permissions. |
+| F‑14 | Same permission set in both builds | Both request the same things: internet access, network state, in-app purchases, notifications, and a couple of utility ones.                          |
 
-### 4. Целевые платформы
+### 4. Target platforms
 
-| Код  | Находка                                      | Что это                                                                                                                         |
-| ---- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| F‑15 | Следы поддержки ТВ и умных часов             | В сборке есть ресурсы для Android TV и часов. Возможно, это не реальная поддержка, а просто остатки библиотек - стоит уточнить. |
-| F‑16 | Настройки для китайских магазинов приложений | В сборке есть конфигурация под магазины vivo, xiaomi, huawei, oppo. Значит, игру планируют распространять и вне Google Play.    |
+| Code  | Finding                                      | What it means                                                                                                                         |
+| ---- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| F‑15 | Traces of TV and smartwatch support             | The build contains resources for Android TV and watches. This might not be actual support, just library leftovers - worth confirming. |
+| F‑16 | Configuration for Chinese app stores | The build contains configuration for the vivo, xiaomi, huawei, and oppo stores. This means the game is planned for distribution outside Google Play too.    |
 
-### 5. Технические факты о сборке
+### 5. Technical build facts
 
-| Код  | Находка                                    | Что это                                                                                                                 |
+| Code  | Finding                                    | What it means                                                                                                                 |
 | ---- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| F‑17 | Игра сделана на старом движке Unity (2019) | Скорее всего именно поэтому целевая версия Android низкая.                                                              |
-| F‑18 | Экран запуска и ориентация                 | Игра стартует в горизонтальной (альбомной) ориентации. Настройки запуска одинаковы в обеих сборках.                     |
-| F‑19 | Игра рисует под вырез экрана               | Картинка рендерится в зону выреза (notch). Есть риск, что интерфейс наложится на вырез - нужно проверить.               |
-| F‑20 | Лишний файл конфига и след iOS-версии      | В сборке лежит ненужный дубль конфигурации и упоминание iOS - значит, у игры есть и версия под iPhone.                  |
-| F‑21 | Внутреннее имя кода - от кулинарной игры   | Внутри код лежит под именем другой игры («cooking…»). Похоже, ферму сделали на переиспользованном коде кулинарной игры. |
+| F‑17 | The game is built on an old Unity engine (2019) | This is most likely why the target Android version is low.                                                              |
+| F‑18 | Launch screen and orientation                 | The game starts in horizontal (landscape) orientation. Launch settings are the same in both builds.                     |
+| F‑19 | The game renders under the screen cutout               | The image renders into the notch area. There's a risk the UI could overlap the cutout - needs checking.               |
+| F‑20 | Extra config file and trace of an iOS version      | The build contains an unnecessary duplicate config and a mention of iOS - meaning the game also has an iPhone version.                  |
+| F‑21 | Internal code name from a cooking game   | Internally the code sits under the name of a different game ("cooking…"). It looks like the farm was built by reusing a cooking game's codebase. |
 
-### 6. Из чего состоит игра
+### 6. What the game consists of
 
-| Код  | Находка                | Что это                                                                                                                                                                                                                          |
-| ---- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F‑22 | Карта содержимого игры | Это тайм-менеджмент на ферме: одна локация, посетители с заказами, апгрейды, бустеры, сбор награды, магазин, ежедневные предложения, подарки, обучающие подсказки. Этот список стал основой чек-листа тестирования (Задание №2). |
+| Code  | Finding                | What it means                                                                                                                                                                                                                          |
+| ---- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F‑22 | Map of game content | This is a farm time-management game: one location, visitors with orders, upgrades, boosters, reward collection, a shop, daily deals, gifts, tutorial hints. This list became the basis of the test checklist (Assignment #2). |
 
 ---
-
-## 

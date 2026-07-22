@@ -1,64 +1,60 @@
-# BUG-009 - Краш на старте на 16-КБ page size устройствах (нативные .so выровнены под 4 КБ) - несовместимость и риск Google Play
+# BUG-009 - Crash on startup on 16 KB page size devices (native .so files aligned for 4 KB) - incompatibility and Google Play risk
 
-| Поле                 | Значение                                                               |
+| Field                 | Value                                                               |
 | -------------------- | ---------------------------------------------------------------------- |
 | **Type**             | Compatibility / Store compliance                                       |
 | **Severity**         | Major                                                                  |
 | **Priority**         | High                                                                   |
 | **Status**           | Open                                                                   |
-| **Affects build**    | Test1 (v0.7.0 / code 1700); по статике - и Test2                       |
-| **Environment**      | AVD, образ Android «16 KB Page Size» (API 37), x86_64 (ARM-трансляция) |
-| **Component / Area** | Нативные библиотеки / упаковка APK                                     |
-| **Reproducibility**  | Always (краш на старте на 16-КБ образе)                                |
+| **Affects build**    | Test1 (v0.7.0 / code 1700); also Test2 per static analysis                       |
+| **Environment**      | AVD, Android "16 KB Page Size" image (API 37), x86_64 (ARM translation) |
+| **Component / Area** | Native libraries / APK packaging                                     |
+| **Reproducibility**  | Always (crash on startup on the 16 KB image)                                |
 
-## Предусловия
+## Preconditions
 
-Эмулятор (AVD) на системном образе с размером страницы памяти **16 КБ**
+Emulator (AVD) on a system image with a **16 KB** memory page size.
 
-## Шаги воспроизведения
+## Steps to reproduce
 
-1. Установить APK Test1 на AVD с 16-КБ образом (установка проходит)
-2. Запустить игру
-3. При старте система показывает предупреждение о несовместимости, затем игра **падает** на загрузке нативной библиотеки
+1. Install the Test1 APK on an AVD with the 16 KB image (install succeeds)
+2. Launch the game
+3. On startup, the system shows an incompatibility warning, then the game **crashes** while loading a native library
 
-## Ожидаемый результат
+## Expected result
 
-Нативные библиотеки выровнены под 16 КБ, приложение запускается на 16-КБ устройствах (требование Google Play для новых и обновляемых приложений)
+Native libraries are aligned for 16 KB, the app launches on 16 KB devices (a Google Play requirement for new and updated apps).
 
-## Фактический результат
+## Actual result
 
-Игра **не запускается** - падает на старте:
+The game **fails to launch** - it crashes on startup:
 
-![Краш: UnsatisfiedLinkError, libmain.so](attachments/BUG-009/16kb_crash_libmain.png)
+![Crash: UnsatisfiedLinkError, libmain.so](attachments/BUG-009/16kb_crash_libmain.png)
 
+Before the crash, the system also shows an "Android App Compatibility" dialog listing the libraries not aligned for 16 KB:
 
+![16 KB incompatibility warning](attachments/BUG-009/16kb_compatibility_dialog_1.png)
 
-Перед крахом система также показывает диалог «Android App Compatibility» со списком неалигнутых под 16 КБ библиотек:
+![List of unaligned libraries](attachments/BUG-009/16kb_compatibility_dialog_2.png)
 
-![Предупреждение о несовместимости 16 КБ](attachments/BUG-009/16kb_compatibility_dialog_1.png)
+Bottom line: on a 16 KB page size device, the app **doesn't start** (alignment 8192 < 16384), the process closes on "OK".
 
-![Список неалигнутых библиотек](attachments/BUG-009/16kb_compatibility_dialog_2.png)
+This is also confirmed by the Logcat logs in Android Studio:
 
-Итог: на 16-КБ page size устройстве приложение **не стартует** (alignment 8192 < 16384), процесс закрывается по «OK».
+[Log screenshot](attachments/BUG-009/Logcat_Screen.png) + [Log text](attachments/BUG-009/logcat_16kb_crash.txt)
 
+## Attachments
 
+- [16 KB incompatibility warning](attachments/BUG-009/16kb_compatibility_dialog_1.png)
+- [List of unaligned libraries](attachments/BUG-009/16kb_compatibility_dialog_2.png)
+- [Crash: UnsatisfiedLinkError, libmain.so](attachments/BUG-009/16kb_crash_libmain.png)
+- [Logcat screenshot](attachments/BUG-009/Logcat_Screen.png)
+- [Log text (logcat_16kb_crash.txt)](attachments/BUG-009/logcat_16kb_crash.txt)
 
-То же самое подтверждается логами Logcat в Android Studio:
+## Notes
 
-[Скрин лога](attachments/BUG-009/Logcat_Screen.png) + [Текст лога](attachments/BUG-009/logcat_16kb_crash.txt)
+**Dynamic confirmation of a static finding from Assignment #1** (APK Analyzer: *"Does not support 16 KB devices"*, *"4 KB LOAD section alignment, but 16 KB is required"*). Static analysis and dynamic testing agree: in a real 16 KB environment, this is a **crash on launch**.
 
-## Вложения
+On the primary device (Xiaomi 12T Pro, 4 KB pages) the game works - the defect only manifests on 16 KB page size devices. For those devices, severity is effectively **Critical** (the app doesn't launch). Google Play **requires** 16 KB support for new and updated apps (as of November 2025) - this is a **blocker** for publishing/updating.
 
-- [Предупреждение о несовместимости 16 КБ](attachments/BUG-009/16kb_compatibility_dialog_1.png)
-- [Список неалигнутых библиотек](attachments/BUG-009/16kb_compatibility_dialog_2.png)
-- [Краш: UnsatisfiedLinkError, libmain.so](attachments/BUG-009/16kb_crash_libmain.png)
-- [Скрин лога Logcat](attachments/BUG-009/Logcat_Screen.png)
-- [Текст лога (logcat_16kb_crash.txt)](attachments/BUG-009/logcat_16kb_crash.txt)
-
-## Заметки
-
-**Динамическое подтверждение статической находки Задания №1** (APK Analyzer: *«Does not support 16 KB devices»*, *«4 KB LOAD section alignment, but 16 KB is required»*). Статика + динамика сходятся: на реальном 16-КБ окружении это **краш на запуске.
-
-На основном устройстве (Xiaomi 12T Pro, 4-КБ страницы) игра работает - дефект проявляется только на 16-КБ page size устройствах. Для таких устройств severity фактически **Critical** (приложение не запускается). Google Play **требует** поддержку 16 КБ для новых и обновляемых приложений (с ноября 2025) - для публикации/апдейта это **блокер**.
-
-**Влияние на тест-прогон:** это единственный доступный в текущей среде (Android Studio Quail 1 | 2026.1.1 Patch 2) образ эмулятора, поэтому эмулятор-прогон совместимости заблокирован (смоук на 16-КБ образе падает на S2).
+**Impact on the test run:** this is the only emulator image available in the current environment (Android Studio Quail 1 | 2026.1.1 Patch 2), so the emulator compatibility run is blocked (the smoke test fails at S2 on the 16 KB image).

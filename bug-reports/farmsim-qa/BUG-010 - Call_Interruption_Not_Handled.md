@@ -1,52 +1,50 @@
-# BUG-010 - Прерывание звонком обрабатывается некорректно: обычный звонок не ставит игру на паузу; VoIP-звонок с переключением приложения выкидывает в главное меню
+# BUG-010 - Call interruption handled incorrectly: a regular call doesn't pause the game; a VoIP call with app switching kicks the player to the main menu
 
-| Поле                 | Значение                                                                             |
+| Field                 | Value                                                                             |
 | -------------------- | ------------------------------------------------------------------------------------ |
-| **Type**             | Functional (прерывания / жизненный цикл)                                             |
+| **Type**             | Functional (interruptions / lifecycle)                                             |
 | **Severity**         | Major                                                                                |
 | **Priority**         | Medium                                                                               |
 | **Status**           | Open                                                                                 |
 | **Affects build**    | Test1 (v0.7.0 / code 1700)                                                           |
 | **Environment**      | Xiaomi 12T Pro, Android 15 (API 35), arm64                                           |
-| **Component / Area** | Прерывания / жизненный цикл (onPause/onResume, аудиофокус, восстановление состояния) |
+| **Component / Area** | Interruptions / lifecycle (onPause/onResume, audio focus, state restoration) |
 | **Reproducibility**  | Always                                                                               |
 
-## Предусловия
+## Preconditions
 
-Игра запущена, идёт активный игровой процесс (уровень)
+The game is running, active gameplay is in progress (a level).
 
-## Вариант А - обычный телефонный звонок не ставит игру на паузу
+## Variant A - a regular phone call doesn't pause the game
 
-**Шаги:**
+**Steps:**
 
-1. Начать игровой процесс (уровень)
-2. Инициировать входящий телефонный (GSM) звонок на устройство
-3. Наблюдать поведение игры во время звонка
+1. Start gameplay (a level)
+2. Trigger an incoming phone (GSM) call on the device
+3. Observe the game's behavior during the call
 
-**Ожидаемый результат:**
-Игра ставится на паузу (или корректно уходит в фон), звук глушится/микшируется под звонок; после завершения звонка игра продолжается с того же места.
+**Expected result:**
+The game pauses (or correctly goes to background), sound is muted/mixed under the call; after the call ends, the game resumes from the same point.
 
-**Фактический результат:**
-Игра **не встаёт на паузу** - продолжает идти во время звонка (геймплей/таймеры не останавливаются, звук приглушается, но не останавливается, экран затемняется. После перехода полностью на экран звонка и возврата в игру - игра не стоит на паузе, процесс продолжается;
+**Actual result:**
+The game **doesn't pause** - it keeps running during the call (gameplay/timers don't stop, sound is muted but not stopped, the screen dims). After fully switching to the call screen and returning to the game - the game isn't paused, the session keeps going.
 
-## Вариант Б - VoIP-звонок с переключением приложения выкидывает в главное меню
+## Variant B - a VoIP call with app switching kicks the player to the main menu
 
-**Шаги:**
+**Steps:**
 
-1. Начать игровой процесс (уровень)
-2. Принять звонок в мессенджере (VoIP)
-3. Вернуться в игру
+1. Start gameplay (a level)
+2. Answer a call in a messaging app (VoIP)
+3. Return to the game
 
-**Ожидаемый результат:**
-Возврат восстанавливает текущий игровой экран и состояние сессии (как при обычном сворачивании) или игра ставится на паузу как при GSM звонке
+**Expected result:**
+Returning restores the current gameplay screen and session state (as with regular backgrounding), or the game pauses as with a GSM call.
 
-**Фактический результат:**
-При возврате игра находится в состоянии "в главном меню", т.е. на запуске уровня  - текущий игровой экран/прогресс сессии теряется
+**Actual result:**
+On return, the game is in the "main menu" state, i.e. at the level-launch screen - the current gameplay screen/session progress is lost.
 
-## Вложения
+## Attachments
 
 ![Phone_Call_interruption_Bug](attachments/BUG-010/Phone_Call_interruption_Bug.gif)
 
-- `attachments/BUG-010/call_interruption.mp4` (запись: поведение при телефонном звонке)
-
-# 
+- `attachments/BUG-010/call_interruption.mp4` (recording: behavior during a phone call)

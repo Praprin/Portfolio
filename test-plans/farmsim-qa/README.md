@@ -1,32 +1,30 @@
-# Задание №2 - Тестирование
+# Assignment #2 - Testing
 
-Подход, окружение и наблюдения к тестированию FarmSim. Сам прогон — в [чек-листе](checklist.md), найденные дефекты — в [баг-репортах](../../bug-reports/farmsim-qa/README.md).
+Approach, environment, and notes for FarmSim testing. The actual test run is in the [checklist](checklist.md); defects found are in the [bug reports](../../bug-reports/farmsim-qa/README.md).
 
-## Объект
+## Object
 
-Билд `FarmSim-QA-Test1.apk`, v0.7.0 / code 1700, arm64, targetSdk 30) - выбран как более новый и релизный по конфигурации.
+Build `FarmSim-QA-Test1.apk`, v0.7.0 / code 1700, arm64, targetSdk 30 — chosen as the newer and more release-like configuration.
 
-## Окружение / устройства
+## Environment / devices
 
-| Конфигурация                | Тип                   | Роль                                              |
+| Configuration                | Type                   | Role                                              |
 | --------------------------- | --------------------- | ------------------------------------------------- |
-| Xiaomi 12T Pro (Android 14) | физическое устройство | основной прогон: перф, графика, notch, прерывания |
-| AVD, Pixel 7, API 37        | эмулятор              | проверка совместимости                            |
+| Xiaomi 12T Pro (Android 14) | physical device | main run: perf, graphics, notch, interruptions |
+| AVD, Pixel 7, API 37        | emulator              | compatibility check                            |
 
-## Подход
+## Approach
 
-- Функциональное тестирование по чек-листу (`checklist.md`) + игровые механики (заказы, апгрейды, бустеры, сбор, магазин/IAP, daily deals, туториал, сохранение).
-- Нефункциональное: производительность, UI/верстка, звук, прерывания, сеть, соответствие гайдлайнам сторов.
-- Негативные сценарии и прерывания (спам-тапы, поворот, звонок, сворачивание, офлайн).
-- Динамика: перехват трафика (Fiddler) - сверка эндпоинтов с заявленным сбором данных.
-- Каждый Fail чек-листа -> карточка бага в [`bug-reports/farmsim-qa/`](../../bug-reports/farmsim-qa/README.md)
-- Вложения (скрины/видео/логи) - в [`bug-reports/farmsim-qa/attachments/`](../../bug-reports/farmsim-qa/attachments/)
+- Functional testing via checklist (`checklist.md`) + game mechanics (orders, upgrades, boosters, collection, shop/IAP, daily deals, tutorial, save).
+- Non-functional: performance, UI/layout, sound, interruptions, network, store guideline compliance.
+- Negative scenarios and interruptions (spam-tapping, rotation, calls, backgrounding, offline).
+- Dynamic: traffic interception (Fiddler) - cross-checking endpoints against declared data collection.
+- Each checklist Fail -> a bug card in [`bug-reports/farmsim-qa/`](../../bug-reports/farmsim-qa/README.md)
+- Attachments (screenshots/video/logs) - in [`bug-reports/farmsim-qa/attachments/`](../../bug-reports/farmsim-qa/attachments/)
 
-## Наблюдения по QA-сборке (не баги - ограничения/особенности тестируемого билда)
+## Observations on the QA build (not bugs - limitations/quirks of the build under test)
 
-Это не дефекты продукта, а следствие того, что тестируется нерелизная QA-сборка. Фиксирую и передаю команде для контекста.
+These aren't product defects but a consequence of testing a non-release QA build. Noting them and passing them to the team for context.
 
-- **In-App Purchase (IAP) замокан.** Реальные покупки через Google Play Billing на этой сборке **не проверяемы**: каталог товаров не загружается (в логе `Unavailable product hard_2 … hard_80`), а покупка гемов проходит **мгновенно и бесплатно** с сообщением «Спасибо. Наслаждайтесь игрой» - это заглушка QA-сборки для получения/траты валюты. Полноценный флоу покупки нужно проверять на билде из Play Console / internal testing.
-- **Unity Ads не инициализируется.** В логе видно`Unity Ads SDK fail to initialize due to internal error`,. Вероятно, т.к. QA-релиз (не продакшн ключи/настройки рекламы). Уточнить у команды. **Важно:** это также поправка к статике - **Unity Ads в игре есть** (реклама интегрирована).
-
-
+- **In-App Purchase (IAP) is mocked.** Real purchases via Google Play Billing **can't be verified** on this build: the product catalog fails to load (log shows `Unavailable product hard_2 … hard_80`), and buying gems completes **instantly and for free** with the message "Thank you. Enjoy the game" — this is a QA-build stub for acquiring/spending currency. The full purchase flow needs to be checked on a build from Play Console / internal testing.
+- **Unity Ads doesn't initialize.** The log shows `Unity Ads SDK fail to initialize due to internal error`. Likely because this is a QA release (not production ad keys/settings). To confirm with the team. **Important:** this is also a correction to the static analysis - **Unity Ads is present in the game** (ads are integrated).

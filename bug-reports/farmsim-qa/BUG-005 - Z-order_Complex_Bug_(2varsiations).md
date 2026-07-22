@@ -1,74 +1,74 @@
-# BUG-005 - Неправильный z-order окон подарков/наград/Daily Deals над магазином (перекрытие, блокировка «Продолжить», утечка в геймплей)
+# BUG-005 - Incorrect z-order of gift/reward/Daily Deals windows over the shop (overlap, blocked "Continue", leaks into gameplay)
 
-| Поле                 | Значение                                                                          |
-| -------------------- | --------------------------------------------------------------------------------- |
-| **Type**             | UI / Visual (z-order / жизненный цикл UI)                                         |
+| Field                 | Value                                                                          |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| **Type**             | UI / Visual (z-order / UI lifecycle)                                         |
 | **Severity**         | Major                                                                             |
 | **Priority**         | High                                                                              |
 | **Status**           | Open                                                                              |
 | **Affects build**    | Test1 (v0.7.0 / code 1700)                                                        |
 | **Environment**      | Xiaomi 12T Pro, Android 15 (API 35), arm64                                        |
-| **Component / Area** | UI / модальные окна / z-order / жизненный цикл UI (подарки, Daily Deals, магазин) |
-| **Reproducibility**  | Вариант A - **Always**; Вариант Б - **Sometimes** (2 раза за 10+ сессий)          |
+| **Component / Area** | UI / modal windows / z-order / UI lifecycle (gifts, Daily Deals, shop) |
+| **Reproducibility**  | Variant A - **Always**; Variant B - **Sometimes** (2 times over 10+ sessions)          |
 
-Один дефект (сломанное управление слоями/модальными окнами) с несколькими проявлениями.
+One defect (broken modal window/layer management) with several manifestations.
 
-## Вариант A - окна подарков/Daily Deals наслаиваются на магазин (Always)
+## Variant A - gift/Daily Deals windows layer over the shop (Always)
 
-**Шаги:**
+**Steps:**
 
-1. Открыть Магазин и наблюдать его меню - слой 1
-2. Получить ежедневный подарок и наблюдать, что ящик появился ЗА меню Магазина (слой 0), а вылетевший из него подарок - ПЕРЕД меню магазина (слой 3)
-3. Наблюдать внизу экрана надпись "Нажмите, чтобы продолжить", тапнуть по ней и наблюдать, что подарок не скроется, надпись некликабельна
-4. Купить товар за гемы/кристалы (например Щит) и наблюдать, что попап о том, что Вы собираетесь потратить гемы выезжает МЕЖДУ меню Магазина и отображением самого ежедневного подарка (т.е. слой 2)
+1. Open the Shop and observe its menu - layer 1
+2. Claim the daily gift and observe that the box appears BEHIND the Shop menu (layer 0), while the gift that pops out of it appears IN FRONT of the shop menu (layer 3)
+3. Note the "Tap to continue" label at the bottom of the screen; tap it and observe that the gift doesn't disappear - the label isn't clickable
+4. Buy an item with gems/crystals (e.g. Shield) and observe that the popup warning you're about to spend gems slides in BETWEEN the Shop menu and the daily gift display (i.e. layer 2)
 
-**Ожидаемый результат:**
+**Expected result:**
 
-1. Анимация и изображение Ежедневного подарка отображается ПЕРЕД меню Магазина (на слое 2)
-2. Меню магазина при этом каким-то образом затемняется или уходит в разблюр или и то и другое, чтобы анимацию подарка было видно.
-3. По тапу подарок скрывается и можно выбрать другой товар
-4. При покупке товара за гемы, попап окно-предупреждение также появляется ПЕРЕД меню магазина, а меню магазина уходит из фокуса внимания через затемнение и(или) блюр, при подтверждении покупки окно уходит, анимация и изображение товара происходит ПЕРЕД меню магазина.
-5. Если на экране уже показан, например Ежедневный подарок, то покупка другого товара должна быть недоступна, пока не сделан тап по подарку и он не исчез, т.е. анимация второго товара ПОВЕРХ первого не должна происходить
-6. Заголовки экранов (Награда/Магазин) должны также находиться на экране отдельно и не перекрывать друг друга в одно и то же время
+1. The Daily Gift's animation and image display IN FRONT of the Shop menu (at layer 2)
+2. The shop menu should somehow dim, blur, or both, so the gift animation is visible.
+3. Tapping hides the gift and another item can be selected
+4. When buying an item with gems, the warning popup also appears IN FRONT of the shop menu, and the shop menu loses focus via dimming and/or blur; upon purchase confirmation the popup disappears, and the item's animation and image happen IN FRONT of the shop menu.
+5. If, say, the Daily Gift is already shown on screen, purchasing another item should be unavailable until the gift is tapped and disappears, i.e. the second item's animation shouldn't play ON TOP of the first
+6. Screen titles (Reward/Shop) should also each appear on screen separately and not overlap each other at the same time
 
-**Фактический результат:**
+**Actual result:**
 
-1. При получении Ежедневного подарка, он **всегда наслаивается** на меню Магазина и надпись "Нажмите, чтобы продолжить" некликабельна, хотя и видна
-2. При покупке товара за гемы, он наслаивается на меню Магазина
-3. Получение их по очереди наслаивает их друг на друга с неправильным z-order, как описано в Шагах
-4. Части оказываются под/над магазином вперемешку
-5. Выйти из этой ситуации можно только нажав "крестик" в правом верхнем углу, который закрывает меню Магазина и становится видно окно подарка, его можно тапнуть и он пропадет
-6. Заголовки экранов (Награда/Магазин) наслаиваются друг на друга, появляясь в одно время и в одном и том же месте, как видно на гиф из приложения
+1. When the Daily Gift is claimed, it **always layers** over the Shop menu, and the "Tap to continue" label is visible but not clickable
+2. When buying an item with gems, it layers over the Shop menu
+3. Claiming them one after another stacks them with incorrect z-order, as described in the Steps
+4. Parts end up below/above the shop in a mixed-up way
+5. The only way out is tapping the "X" in the top-right corner, which closes the Shop menu and reveals the gift window, which can then be tapped to dismiss it
+6. Screen titles (Reward/Shop) overlap each other, appearing at the same time and in the same place, as seen in the attached gif
 
-## Вариант Б - утечка UI подарка в геймплей (Sometimes, 2 раза)
+## Variant B - gift UI leaks into gameplay (Sometimes, 2 times)
 
-**Предусловия:**
+**Preconditions:**
 
-1. Игра запущена
-2. Меню Магазина открыто
+1. The game is running
+2. The Shop menu is open
 
-**Шаги (дефект не удалось воспроизвести повторно; ниже - шаги, при которых баг проявился):**
+**Steps (couldn't reproduce the defect again; below are the steps under which the bug occurred):**
 
-1. Забрать Ежедневный подарок в меню слева снизу (коробка отобразится под магазином, содержимое над)
-2. Купить доступный товар за гемы в меню слева сверху (попап окно выйдет НАД меню Магазина и ПОД изображением Ежедневного подарка)
-3. Подтвердить покупку товара за гемы (попап пропадет), элементы Ежедневного подарка останутся как и были
-4. Нажать на "крестик" справа сверху, меню Магазина закроется, появится главное меню (запуск уровня)
-5. Нажать "Начать уровень", появится меню выбора Бустеров и кнопка "Играть"
-6. Нажать "Играть", появится экран загрузки уровня и начнется сам уровень
+1. Claim the Daily Gift in the bottom-left menu (the box shows under the shop, its contents above)
+2. Buy an available item with gems in the top-left menu (the popup appears ABOVE the Shop menu and BELOW the Daily Gift display)
+3. Confirm the gem purchase (the popup disappears), the Daily Gift elements stay as they were
+4. Tap the "X" in the top-right, the Shop menu closes, the main menu appears (level launch)
+5. Tap "Start Level", the Booster selection menu and "Play" button appear
+6. Tap "Play", the level loading screen appears and the level itself begins
 
-**Ожидаемый результат:**
+**Expected result:**
 
-1. Тап по подарку или надписи "Нажмите, чтобы продолжить" убирает UI подарка
-2. UI Ежедневного подарка полностью убирается при закрытии Магазина и переходе к экрану запуска уровня
-3. UI Ежедневного подарка полностью убирается при загрузке непосредственно уровня
+1. Tapping the gift or the "Tap to continue" label removes the gift UI
+2. The Daily Gift UI is fully removed when the Shop closes and the level-launch screen appears
+3. The Daily Gift UI is fully removed once the level itself loads
 
-**Фактический результат:**
+**Actual result:**
 
-1. Во время наложения слоёв тап по подарку или надписи "Нажмите, чтобы продолжить" не убирает UI подарка
-2. После закрытия магазина коробка/подарок **остаются поверх главного меню**, видны на экране выбора Бустера (ПЕРЕД меню Бустеров, но ЗА слоем с персонажем, объясняющим что делать). UI подарка **скрывается** во время экрана с анимацией загрузки уровня, но затем виден **поверх геймплея** - убирается только тапом по нему, который в этот момент работает.
+1. While the layers are overlapping, tapping the gift or the "Tap to continue" label doesn't remove the gift UI
+2. After closing the shop, the box/gift **stays on top of the main menu**, visible on the Booster selection screen (IN FRONT of the Booster menu, but BEHIND the character layer explaining what to do). The gift UI **is hidden** during the level-loading animation screen, but is then visible **on top of gameplay** - it's only removed by tapping it, which works at that point.
 
-## Вложения
+## Attachments
 
-![Вариант А: наслоение окна подарка под и над магазином](attachments/BUG-005/Z-order_Bug_var1.gif)
+![Variant A: gift window layering under and over the shop](attachments/BUG-005/Z-order_Bug_var1.gif)
 
-![Вариант Б: утечка UI подарка в геймплей](attachments/BUG-005/Z-order_Bug_var2.gif)
+![Variant B: gift UI leaking into gameplay](attachments/BUG-005/Z-order_Bug_var2.gif)
