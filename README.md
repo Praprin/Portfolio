@@ -1,6 +1,6 @@
 # Portfolio
 
-QA portfolio: test assignments and projects organized by artifact type rather than by project — makes it easier to compare like-for-like work across projects.
+QA portfolio: test assignments and projects organized by artifact type.
 
 ```
 bug-reports/<project>/   — bug cards + attachments (screenshots/gifs/video/logs)
@@ -8,7 +8,7 @@ test-plans/<project>/    — checklists, test plans, approach/environment notes
 reports/<project>/       — build comparisons, findings, analysis, project overview READMEs
 ```
 
-Each project lives as an identically-named subfolder inside all three categories at once — so the context of a specific assignment isn't lost, and as the portfolio grows it's easy to filter "all bug reports" or "all checklists."
+Each project lives as an identically-named subfolder inside all three categories at once"
 
 ## Projects
 
